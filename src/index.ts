@@ -13,6 +13,7 @@ export interface CliOptions {
   cols: number;
   rows: number;
   command: string[];
+  token: string;
 }
 
 export function parseArgs(argv: string[]): CliOptions {
@@ -22,6 +23,7 @@ export function parseArgs(argv: string[]): CliOptions {
     .option("--name <name>", "Session name")
     .option("--cols <number>", "Number of columns", String(process.stdout.columns || 80))
     .option("--rows <number>", "Number of rows", String(process.stdout.rows || 24))
+    .option("--token <token>", "Auth token for server authentication", "")
     .argument("[command...]", "Command to run")
     .allowExcessArguments(true)
     .passThroughOptions()
@@ -43,6 +45,7 @@ export function parseArgs(argv: string[]): CliOptions {
     cols,
     rows,
     command,
+    token: opts.token,
   };
 }
 
@@ -104,7 +107,10 @@ function main(): void {
   let isShuttingDown = false;
 
   function connect(): void {
-    const url = `${options.server}/ws/console?name=${encodeURIComponent(options.name)}&cols=${options.cols}&rows=${options.rows}`;
+    let url = `${options.server}/ws/console?name=${encodeURIComponent(options.name)}&cols=${options.cols}&rows=${options.rows}`;
+    if (options.token) {
+      url += `&token=${encodeURIComponent(options.token)}`;
+    }
     ws = new WebSocket(url);
 
     ws.on("open", () => {
