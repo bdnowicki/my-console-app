@@ -1,0 +1,52 @@
+{
+  "name": "my-console-app",
+  "version": "1.0.0",
+  "description": "CLI tool that spawns a local PTY and mirrors I/O to a WebSocket-based console server",
+  "type": "module",
+  "bin": {
+    "my-console-app": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "terminal",
+    "pty",
+    "websocket",
+    "console",
+    "cli",
+    "node-pty",
+    "remote-terminal"
+  ],
+  "author": "Bartosz Nowicki",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bdnowicki/my-console-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bdnowicki/my-console-app/issues"
+  },
+  "homepage": "https://github.com/bdnowicki/my-console-app#readme",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "node-pty": "^1.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
