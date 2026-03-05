@@ -74,7 +74,15 @@ function getDefaultShell(): string {
 }
 
 function main(): void {
-  const options = parseArgs(process.argv);
+  let options: CliOptions;
+  try {
+    options = parseArgs(process.argv);
+  } catch (err: unknown) {
+    // exitOverride() makes commander throw instead of calling process.exit().
+    // Catch help/version display and exit cleanly.
+    const code = (err as { exitCode?: number }).exitCode;
+    process.exit(typeof code === "number" ? code : 1);
+  }
 
   const shellCommand =
     options.command.length > 0
