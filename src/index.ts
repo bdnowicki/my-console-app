@@ -14,6 +14,7 @@ export interface CliOptions {
   rows: number;
   command: string[];
   token: string;
+  insecure: boolean;
 }
 
 export function parseArgs(argv: string[]): CliOptions {
@@ -24,6 +25,7 @@ export function parseArgs(argv: string[]): CliOptions {
     .option("--cols <number>", "Number of columns", String(process.stdout.columns || 80))
     .option("--rows <number>", "Number of rows", String(process.stdout.rows || 24))
     .option("--token <token>", "Auth token for server authentication", "")
+    .option("--insecure", "Disable TLS certificate verification", false)
     .argument("[command...]", "Command to run")
     .allowExcessArguments(true)
     .passThroughOptions()
@@ -46,6 +48,7 @@ export function parseArgs(argv: string[]): CliOptions {
     rows,
     command,
     token: opts.token,
+    insecure: opts.insecure,
   };
 }
 
@@ -111,7 +114,7 @@ function main(): void {
     if (options.token) {
       url += `&token=${encodeURIComponent(options.token)}`;
     }
-    ws = new WebSocket(url);
+    ws = new WebSocket(url, options.insecure ? { rejectUnauthorized: false } : undefined);
 
     ws.on("open", () => {
       console.error("[my-console-app] Connected to server");
